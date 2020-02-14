@@ -54,7 +54,8 @@ $config = [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
-                //['class' => UrlRule::class, 'controller' => 'brand']
+                ['class' => UrlRule::class, 'controller' => 'brand'] ,
+                ['class' => UrlRule::class, 'controller' => 'product']
             ],
         ],
 

@@ -16,6 +16,11 @@ use Yii;
  */
 class Brand extends \yii\db\ActiveRecord
 {
+
+    public function fields()
+    {
+        return ['brand_id', 'logo', 'name', 'updated', 'products'];
+    }
     /**
      * {@inheritdoc}
      */

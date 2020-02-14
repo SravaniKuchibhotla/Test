@@ -28,24 +28,39 @@ class ProductController extends ActiveController
 
     public function prepareDataProvider()
     {
-        $mpn = Product::find()->andWhere(['mpn' => Yii::$app->request->get('mpn')]);
-        $brand_id = Product::find()->andWhere(['brand_id' => Yii::$app->request->get('brand_id')]);
-        $name = Product::find()->andWhere(['name' => Yii::$app->request->get('name')]);
-        //@todo:: only one condition is working
-        /*else if and else not working returning only [].
-        only if condition works to display selected mpn's. Try out "http://localhost:8080/Test/web/product/index?mpn=7647623"
-        */
-        if ($mpn != null) {
+        $mpn = Yii::$app->request->get('mpn', false);
+        $name = Yii::$app->request->get('name', false);
+        $brand_id = Yii::$app->request->get('brand_id', false);
+        $product_id = Yii::$app->request->get('product_id', false);
+
+        if (empty($mpn) && empty($name) && empty($brand_id) && empty($product_id)) {
             return new ActiveDataProvider([
-                'query' => Product::find()->andWhere(['mpn' => Yii::$app->request->get('mpn')])
+                'query' => Product::find()
             ]);
-        } elseif ($name != null && empty($name)) {
+        }
+
+        if (!empty($mpn)) {
             return new ActiveDataProvider([
-                'query' => Product::find()->andWhere(['name' => Yii::$app->request->get('name')])
+                'query' => Product::find()->andWhere(['mpn' => \Yii::$app->request->get('mpn')])
             ]);
-        } else{
+        }
+
+        if (!empty($name)) {
             return new ActiveDataProvider([
-                'query' => Product::find()]);
+                'query' => Product::find()->andWhere(['name' => \Yii::$app->request->get('name')])
+            ]);
+        }
+
+        if (!empty($product_id)) {
+            return new ActiveDataProvider([
+                'query' => Product::find()->andWhere(['product_id' => \Yii::$app->request->get('product_id')])
+            ]);
+        }
+
+        if (!empty($brand_id)) {
+            return new ActiveDataProvider([
+                'query' => Product::find()->andWhere(['brand_id' => \Yii::$app->request->get('brand_id')])
+            ]);
         }
     }
 }

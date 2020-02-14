@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use Yii;
 use app\models\Brand;
 use app\models\BrandSearch;
 use app\models\Product;
@@ -13,7 +14,7 @@ class BrandController extends ActiveController
 {
     public $modelClass = Brand::class;
 
-    /*public function actions()
+    public function actions()
     {
         $actions = parent::actions();
         $actions['index']['prepareDataProvider'] = [$this, 'prepareDataProvider'];
@@ -22,26 +23,32 @@ class BrandController extends ActiveController
 
     public function prepareDataProvider()
     {
+        $logo = Yii::$app->request->get('logo', false);
+        $name = Yii::$app->request->get('name', false);
+        $brand_id = Yii::$app->request->get('brand_id', false);
 
-        return new ActiveDataProvider([
-            'query' => Product::find()->andWhere(['name' => \Yii::$app->request->get('name')])
-        ]);
+        if (empty($logo) && empty($name)) {
+            return new ActiveDataProvider([
+                'query' => Brand::find()
+            ]);
+        }
+
+        if (!empty($logo)) {
+            return new ActiveDataProvider([
+                'query' => Brand::find()->andWhere(['logo' => \Yii::$app->request->get('logo')])
+            ]);
+        }
+
+        if (!empty($name)) {
+            return new ActiveDataProvider([
+                'query' => Brand::find()->andWhere(['name' => \Yii::$app->request->get('name')])
+            ]);
+        }
+
+        if (!empty($brand_id)) {
+            return new ActiveDataProvider([
+                'query' => Brand::find()->andWhere(['brand_id' => \Yii::$app->request->get('brand_id')])
+            ]);
+        }
     }
-
-   /* public function prepareDataProvider()
-    {
-
-        return new ActiveDataProvider([
-            'query' => Product::find()->andWhere(['brand_id' => \Yii::$app->request->get('brand_id')])
-        ]);
-    }*/
-   /* public function actionIndex()
-    {
-        $searchModel = new BrandSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
-        return new ActiveDataProvider([
-        'query' => Product::find()->andWhere(['mpn' => \Yii::$app->request->get('mpn')])
-    ]);
-    }*/
 }
